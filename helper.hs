@@ -15,11 +15,31 @@ data State = Black | Blue | Red | Green | Grey | Yellow | Empty
 count :: Int
 count = 6
 
+shuffle :: [a] -> IO [a]
+shuffle xs = do
+        ar <- newArray n xs
+        forM [1..n] $ \i -> do
+            j <- randomRIO (i,n)
+            vi <- readArray ar i
+            vj <- readArray ar j
+            writeArray ar j vi
+            return vj
+  where
+    n = length xs
+    newArray :: Int -> [a] -> IO (IOArray Int a)
+    newArray n xs =  newListArray (1,n) xs
+	
+makeListOfStates :: Int -> Field
+makeListOfStates count = replicate count (Blue, False) ++ replicate count (Yellow, False) ++ replicate count (Red, False) ++ replicate count (Grey, False) ++ replicate count (Green, False) ++ replicate count (Black, False)
+
 getColor st False = white
 getColor Black True = black
 getColor Empty True = white
 getColor Red True = red
 getColor Blue True = blue
+getColor Green True = green
+getColor Grey True = grey
+getColor Yellow True = yellow
 
 getState :: Field -> Position -> (State, Bool)
 getState field pos = field !! ((fst pos - 1) * count + (snd pos - 1))

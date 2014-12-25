@@ -8,10 +8,10 @@ import Helper
 
 	
 startField :: Field
-startField = replicate (count * count) (Blue, False)
+startField = fieldFromIO (shuffle (makeListOfStates count))
 
 startFieldIO :: IO Field
-startFieldIO = return $ replicate (count * count) (Blue, False)
+startFieldIO = shuffle $ makeListOfStates count
 
 fieldToIO :: Field -> IO Field
 fieldToIO = return
